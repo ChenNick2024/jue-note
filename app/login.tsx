@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-25 08:59:41
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-25 14:41:40
+ * @LastEditTime: 2025-01-25 15:10:32
  * @FilePath: /jue-note/app/login.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -63,7 +63,7 @@ const Login = () => {
         style={{ width: '100%', height: '100%' }}
       >
         <Image 
-          source={{ uri: 'http://s.yezgea02.com/1616032174786/cryptocurrency.png' }} 
+          source={{ uri: 'https://s.yezgea02.com/1616032174786/cryptocurrency.png' }} 
           className="w-full h-80"
         />
         <View className="flex-row px-6 gap-4">
