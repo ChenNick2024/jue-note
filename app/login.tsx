@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-25 08:59:41
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-26 12:29:05
+ * @LastEditTime: 2025-01-26 15:26:39
  * @FilePath: /jue-note/app/login.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -92,14 +92,14 @@ const Login = () => {
             >注册</Text>
           </TouchableOpacity>
         </View>
-        <View className="flex-col px-6 py-10 gap-6">
+        <View className="flex-col px-6 py-10 gap-3">
           <View className="flex-row items-center gap-2">
             <Image source={mobile} className="size-8" />
-            <TextInput className="h-10" placeholder="请输入账号" value={username} onChangeText={setUsername} />
+            <TextInput className="w-full h-14" placeholder="请输入账号" value={username} onChangeText={setUsername} />
           </View>
           <View className="flex-row items-center gap-2">
             <Image source={lock} className="size-8 mb-1" />
-            <TextInput className="h-10" placeholder="请输入密码" value={password} onChangeText={setPassword} />
+            <TextInput className="w-full h-14" placeholder="请输入密码" value={password} onChangeText={setPassword} />
           </View>
           {
             active === 1 ? (

@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:43
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-26 14:08:48
+ * @LastEditTime: 2025-01-26 15:25:01
  * @FilePath: /jue-note/app/(root)/(tabs)/mine.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -80,14 +80,9 @@ const Mine = () => {
           <Image source={icons.rightarrow} tintColor="#888" resizeMode="contain" className="size-5" />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        onPress={handleLogout}
-        className="bg-[#fd5255] rounded-lg w-[90%] py-3 mx-auto absolute bottom-[120px] left-[50%] translate-x-[-50%]"
-      >
-        <View className="flex flex-row items-center justify-center">
-          <Text className="text-lg text-white">退出登录</Text>
-        </View>
-      </TouchableOpacity>
+      <View className="w-[90%] bg-white rounded-lg mx-auto shadow-md shadow-gray-400 absolute bottom-[120px] left-[50%] translate-x-[-50%]">
+        <Button color="#fd5255" title="退出登录" onPress={handleLogout} />
+      </View>
     </SafeAreaView>
   );
 };
