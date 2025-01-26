@@ -2,12 +2,12 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-25 08:59:41
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-26 15:26:39
+ * @LastEditTime: 2025-01-26 15:34:40
  * @FilePath: /jue-note/app/login.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { useState } from "react";
-import { View, Text, TextInput, Button, SafeAreaView, Image, TouchableOpacity, Alert } from "react-native";
+import { useState, useCallback } from "react";
+import { View, Text, TextInput, Button, StatusBar, Image, TouchableOpacity, Alert } from "react-native";
 import { useMutation } from "@tanstack/react-query";
 import { login, register } from "@/api/user";
 import { router } from "expo-router";
@@ -16,7 +16,7 @@ import { getUserInfo } from "@/api/user";
 import { LinearGradient } from 'expo-linear-gradient';
 import { mobile, lock } from "@/constants/image";
 import Toast from "react-native-toast-message";
-
+import { useFocusEffect } from "@react-navigation/native";
 const Login = () => {
   const { setToken, setUserInfo } = useRootStore();
   const { mutate: _getUserInfo } = useMutation({
@@ -44,6 +44,17 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [active, setActive] = useState(1);
+
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBarStyle('light-content');
+      StatusBar.setBackgroundColor('#8bc6f3');
+      return () => {
+        StatusBar.setBarStyle('dark-content');
+        StatusBar.setBackgroundColor('white');
+      }
+    }, [])
+  )
 
   const handleLogin = () => {
     if (!username || !password) {

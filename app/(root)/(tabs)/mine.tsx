@@ -2,12 +2,12 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:43
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-26 15:25:01
+ * @LastEditTime: 2025-01-26 15:31:33
  * @FilePath: /jue-note/app/(root)/(tabs)/mine.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { useEffect, useCallback } from "react";
-import { View, Text, Image, Platform, StatusBar, Button, TouchableOpacity } from "react-native";
+import { View, Text, Image, Platform, StatusBar, Button, TouchableOpacity, Pressable } from "react-native";
 import useRootStore from "@/store/rootStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { logState } from "@/utils/tool";
@@ -80,9 +80,9 @@ const Mine = () => {
           <Image source={icons.rightarrow} tintColor="#888" resizeMode="contain" className="size-5" />
         </TouchableOpacity>
       </View>
-      <View className="w-[90%] bg-white rounded-lg mx-auto shadow-md shadow-gray-400 absolute bottom-[120px] left-[50%] translate-x-[-50%]">
-        <Button color="#fd5255" title="退出登录" onPress={handleLogout} />
-      </View>
+      <Pressable onPress={handleLogout} className="w-[90%] h-[50] flex items-center justify-center bg-red-500 rounded-lg mx-auto shadow-md shadow-gray-400 absolute bottom-[120px] left-[50%] translate-x-[-50%]">
+        <Text className="text-white text-xl">退出登录</Text>
+      </Pressable>
     </SafeAreaView>
   );
 };
