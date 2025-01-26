@@ -2,13 +2,14 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-25 10:31:41
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-25 10:35:36
+ * @LastEditTime: 2025-01-26 14:09:25
  * @FilePath: /jue-note/store/rootStore.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persist, createJSONStorage } from "zustand/middleware"
+import { getUserInfo } from "@/api/user";
 
 interface AppState {
   token: string | null;
@@ -17,6 +18,9 @@ interface AppState {
   userInfo: any;
   setUserInfo: (userInfo: any) => void;
   clearUserInfo: () => void;
+  updateUserInfo: () => void;
+  currentTab: string;
+  setCurrentTab: (tab: string) => void;
 }
 
 const useRootStore = create<AppState>()(
@@ -28,6 +32,13 @@ const useRootStore = create<AppState>()(
       userInfo: {},
       setUserInfo: (userInfo: any) => set({ userInfo }),
       clearUserInfo: () => set({ userInfo: {} }),
+      updateUserInfo: (): void => {
+        getUserInfo().then((res) => {
+          set({ userInfo: res.data });
+        });
+      },
+      currentTab: 'index',
+      setCurrentTab: (tab: string) => set({ currentTab: tab }),
     }),
     {
       name: "rootStore",

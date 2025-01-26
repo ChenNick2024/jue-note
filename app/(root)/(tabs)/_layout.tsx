@@ -2,32 +2,35 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:23
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-25 18:36:55
+ * @LastEditTime: 2025-01-26 14:10:45
  * @FilePath: /jue-note/app/(root)/(tabs)/_layout.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { Tabs } from "expo-router";
 import { View, Text, Image, Pressable } from "react-native";
 import icons from "@/constants/icons";
-
+import useRootStore from "@/store/rootStore";
 const TabsLayout = () => {
-  // 禁用点击涟漪效果
+  const { currentTab } = useRootStore();
   return (
-    <Tabs screenOptions={{
-      tabBarShowLabel: false,
-      tabBarStyle: {
-        backgroundColor: "white",
-        position: "absolute",
-        borderTopWidth: 0,
-        minHeight: 70
-      },
-      // 去除安卓点击涟漪效果，用背景覆盖掉
-      tabBarItemStyle: {
-        backgroundColor: "white"
-      },
-      // 页面跳转效果
-      animation: "fade"
-    }}>
+    <Tabs
+      initialRouteName={currentTab}
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: "white",
+          position: "absolute",
+          borderTopWidth: 0,
+          minHeight: 70
+        },
+        // 去除安卓点击涟漪效果，用背景覆盖掉
+        tabBarItemStyle: {
+          backgroundColor: "white"
+        },
+        // 页面跳转效果
+        animation: "fade",
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
