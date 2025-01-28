@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:43
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-26 15:31:33
+ * @LastEditTime: 2025-01-28 10:32:37
  * @FilePath: /jue-note/app/(root)/(tabs)/mine.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -65,7 +65,7 @@ const Mine = () => {
           </View>
           <Image source={icons.rightarrow} tintColor="#888" resizeMode="contain" className="size-5" />
         </TouchableOpacity>
-        <TouchableOpacity className="flex-row items-center justify-between gap-2 px-4 py-4 border-b border-gray-100">
+        <TouchableOpacity onPress={() => router.push('/resetpass')} className="flex-row items-center justify-between gap-2 px-4 py-4 border-b border-gray-100">
           <View className="flex-row items-center gap-2">
             <Image source={icons.dunpai} tintColor="#0061ff" resizeMode="contain" className="size-6" />
             <Text className="text-[#333] text-base">重置密码</Text>
