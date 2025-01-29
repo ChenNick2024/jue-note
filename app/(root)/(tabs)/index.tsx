@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:32
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-29 20:02:22
+ * @LastEditTime: 2025-01-29 21:18:19
  * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,7 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getBillList } from "@/api/bill";
 import dayjs from "dayjs";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DatePicker from '@/components/DatePicker';
 
 interface ItemProps {
   date: string;
@@ -149,15 +149,13 @@ const Index = () => {
           ListFooterComponent={() => loading ? <ActivityIndicator size="large" color="#1683fc" /> : hasMore ? null : <Text style={{ textAlign: 'center', padding: 10 }}>没有更多数据了</Text>}
         />
       </View>
-      <DateTimePickerModal
-        isVisible={open}
+      <DatePicker
+        show={open}
         date={selectMonth}
-        mode="date" // 只能选日期，但我们只取年/月
-        display="spinner" // iOS: 滚轮, Android: 原生
         onConfirm={(date) => {
-          setOpen(false)
-          setPage(1)
-          setSelectMonth(date)
+          setOpen(false);
+          setPage(1);
+          setSelectMonth(date);
         }}
         onCancel={() => setOpen(false)}
       />
