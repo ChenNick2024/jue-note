@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:43
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-28 10:32:37
+ * @LastEditTime: 2025-01-28 11:58:50
  * @FilePath: /jue-note/app/(root)/(tabs)/mine.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -72,7 +72,7 @@ const Mine = () => {
           </View>
           <Image source={icons.rightarrow} tintColor="#888" resizeMode="contain" className="size-5" />
         </TouchableOpacity>
-        <TouchableOpacity className="flex-row items-center justify-between gap-2 px-4 py-4">
+        <TouchableOpacity onPress={() => router.push('/about')} className="flex-row items-center justify-between gap-2 px-4 py-4">
           <View className="flex-row items-center gap-2">
             <Image source={icons.women} tintColor="#0061ff" resizeMode="contain" className="size-6" />
             <Text className="text-[#333] text-base">关于我们</Text>
