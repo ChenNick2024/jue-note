@@ -1501,6 +1501,13 @@
   dependencies:
     merge-options "^3.0.4"
 
+"@react-native-community/datetimepicker@8.2.0":
+  version "8.2.0"
+  resolved "https://registry.npmmirror.com/@react-native-community/datetimepicker/-/datetimepicker-8.2.0.tgz#f62ac4fc12bd527fbbe93934e6c1cfbb7ba570f3"
+  integrity sha512-qrUPhiBvKGuG9Y+vOqsc56RPFcHa1SU2qbAMT0hfGkoFIj3FodE0VuPVrEa8fgy7kcD5NQmkZIKgHOBLV0+hWg==
+  dependencies:
+    invariant "^2.2.4"
+
 "@react-native/assets-registry@0.76.6":
   version "0.76.6"
   resolved "https://registry.npmmirror.com/@react-native/assets-registry/-/assets-registry-0.76.6.tgz"
@@ -3005,6 +3012,11 @@ data-urls@^3.0.2:
     abab "^2.0.6"
     whatwg-mimetype "^3.0.0"
     whatwg-url "^11.0.0"
+
+dayjs@^1.11.13:
+  version "1.11.13"
+  resolved "https://registry.npmmirror.com/dayjs/-/dayjs-1.11.13.tgz#92430b0139055c3ebb60150aa13e860a4b5a366c"
+  integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.6.9:
   version "2.6.9"
@@ -6284,6 +6296,11 @@ react-native-css-interop@0.1.22:
     lightningcss "^1.27.0"
     semver "^7.6.3"
 
+react-native-date-picker@^5.0.9:
+  version "5.0.9"
+  resolved "https://registry.npmmirror.com/react-native-date-picker/-/react-native-date-picker-5.0.9.tgz#385e359024b285c2c31e9bccb69a754cf45df659"
+  integrity sha512-Ws/fw17/SGvmQ4rU2A8NMFLk7XReUupK0+SE7JwpWJmNyEDDG420kYI17CRkkmSKhajRKqrr8klG3NZ7jihXcA==
+
 react-native-gesture-handler@~2.20.2:
   version "2.20.2"
   resolved "https://registry.npmmirror.com/react-native-gesture-handler/-/react-native-gesture-handler-2.20.2.tgz"
@@ -6307,6 +6324,13 @@ react-native-is-edge-to-edge@^1.1.6:
   version "1.1.6"
   resolved "https://registry.npmmirror.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.6.tgz"
   integrity sha512-1pHnFTlBahins6UAajXUqeCOHew9l9C2C8tErnpGC3IyLJzvxD+TpYAixnCbrVS52f7+NvMttbiSI290XfwN0w==
+
+react-native-modal-datetime-picker@^18.0.0:
+  version "18.0.0"
+  resolved "https://registry.npmmirror.com/react-native-modal-datetime-picker/-/react-native-modal-datetime-picker-18.0.0.tgz#0555b2c9ab34318629a251f250de68a0e3b3980d"
+  integrity sha512-0jdvhhraZQlRACwr7pM6vmZ2kxgzJ4CpnmV6J3TVA6MrXMXK6Zo/upRBKkRp0+fTOiKuNblzesA2U59rYo6SGA==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-native-pager-view@6.5.1:
   version "6.5.1"

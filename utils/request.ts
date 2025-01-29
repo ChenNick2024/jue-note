@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-24 14:25:11
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-26 11:36:47
+ * @LastEditTime: 2025-01-29 19:34:54
  * @FilePath: /jue-note/utils/request.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -58,4 +58,26 @@ instance.interceptors.response.use(
 
 export const request = <T = any>(config: AxiosRequestConfig): Promise<T> => {
   return instance.request(config);
+};
+
+/**
+ * GET请求带参数
+ * @param url 请求地址
+ * @param params 请求参数
+ * @returns Promise
+ */
+export const get = (url: string, params?: Record<string, any>) => {
+  // 构建带查询参数的URL
+  const queryString = params
+    ? `?${Object.entries(params)
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        .join('&')}`
+    : '';
+  
+  return request(url + queryString, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 };
