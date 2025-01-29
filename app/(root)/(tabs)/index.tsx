@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:32
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-29 21:18:19
+ * @LastEditTime: 2025-01-29 21:56:06
  * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getBillList } from "@/api/bill";
 import dayjs from "dayjs";
 import DatePicker from '@/components/DatePicker';
+import Dtp from 'react-native-date-picker'
 
 interface ItemProps {
   date: string;
