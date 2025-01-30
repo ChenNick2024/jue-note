@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:32
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-30 10:17:48
+ * @LastEditTime: 2025-01-30 20:56:58
  * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,7 +14,7 @@
  * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { View, Text, Button, StatusBar, Platform, Pressable, FlatList, Image, RefreshControl, ActivityIndicator } from "react-native";
+import { View, Text, Button, StatusBar, Platform, Pressable, FlatList, Image, RefreshControl, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useEffect, useCallback, useState } from "react";
 import useRootStore from "@/store/rootStore";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -130,6 +130,11 @@ const Index = () => {
       if (action == 'confirm') setTypeObj(val)
     })
   }
+
+  const handleAddBill = () => {
+    console.log('handleAddBill');
+  }
+
   return (
     <SafeAreaView className="h-full bg-[#f5f5f5]">
       <View className="w-full bg-[#1683fc] justify-between pb-4" style={{ marginTop: -insets.top, height: Platform.OS === 'ios' ? 200 : 180 }}>
@@ -189,6 +194,9 @@ const Index = () => {
           ListFooterComponent={() => loading ? <ActivityIndicator size="large" color="#1683fc" /> : hasMore ? null : <Text style={{ textAlign: 'center', padding: 10 }}>没有更多数据了</Text>}
         />
       </View>
+      <TouchableOpacity onPress={handleAddBill} className="absolute z-30 right-4 bottom-[150] w-[50] h-[50] rounded-full bg-[#1683fc] justify-center items-center shadow-md shadow-zinc-300">
+        <Text className="text-white text-[32px]">+</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
