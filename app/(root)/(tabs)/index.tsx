@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:32
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-29 21:56:06
+ * @LastEditTime: 2025-01-30 09:50:39
  * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,8 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getBillList } from "@/api/bill";
 import dayjs from "dayjs";
-import DatePicker from '@/components/DatePicker';
-import Dtp from 'react-native-date-picker'
+import { DatePicker } from '@fruits-chain/react-native-xiaoshu'
 
 interface ItemProps {
   date: string;
@@ -41,7 +40,6 @@ const Index = () => {
   const [total, setTotal] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
-  const [open, setOpen] = useState(false)
   const [selectMonth, setSelectMonth] = useState(new Date())
 
   const insets = useSafeAreaInsets();
@@ -91,6 +89,20 @@ const Index = () => {
     setLoading(true);
     setPage(page + 1);
   }
+
+  const handleSelectMonth = () => {
+    DatePicker({
+      title: '选择月份',
+      mode: 'Y-M',
+      testID: 'date-picker-test',
+    }).then(({ action, value }) => {
+      console.log('单选:Y-D:Promise  =>>  action  =>', action)
+      console.log('单选:Y-D:Promise  =>>  value  =>', value)
+      if (action == 'confirm') {
+        setSelectMonth(value)
+      }
+    })
+  }
   return (
     <SafeAreaView className="h-full bg-[#f5f5f5]">
       <View className="w-full bg-[#1683fc] justify-between pb-4" style={{ marginTop: -insets.top, height: Platform.OS === 'ios' ? 200 : 180 }}>
@@ -108,7 +120,7 @@ const Index = () => {
           <Pressable className="bg-white rounded-full px-4 py-2">
             <Text className="text-black text-[14px]">全部类型</Text>
           </Pressable>
-          <Pressable onPress={() => setOpen(true)} className="bg-white rounded-full px-4 py-2">
+          <Pressable onPress={handleSelectMonth} className="bg-white rounded-full px-4 py-2">
             <Text className="text-black text-[14px]">{dayjs(selectMonth).format('YYYY-MM')}</Text>
           </Pressable>
         </View>
@@ -150,16 +162,6 @@ const Index = () => {
           ListFooterComponent={() => loading ? <ActivityIndicator size="large" color="#1683fc" /> : hasMore ? null : <Text style={{ textAlign: 'center', padding: 10 }}>没有更多数据了</Text>}
         />
       </View>
-      <DatePicker
-        show={open}
-        date={selectMonth}
-        onConfirm={(date) => {
-          setOpen(false);
-          setPage(1);
-          setSelectMonth(date);
-        }}
-        onCancel={() => setOpen(false)}
-      />
     </SafeAreaView>
   );
 };
