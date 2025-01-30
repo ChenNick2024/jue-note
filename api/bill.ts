@@ -8,3 +8,10 @@ export const getBillList = (params: { date: string; page: number; page_size: num
     method: "GET"
   });
 };
+
+export const getBillTypeList = () => {
+  return request({
+    url: '/type/list',
+    method: "GET"
+  });
+};

@@ -2,6 +2,14 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:32
  * @LastEditors: 陈尼克 xianyou1993@qq.com
+ * @LastEditTime: 2025-01-30 10:17:48
+ * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+/*
+ * @Author: 陈尼克 xianyou1993@qq.com
+ * @Date: 2025-01-23 13:45:32
+ * @LastEditors: 陈尼克 xianyou1993@qq.com
  * @LastEditTime: 2025-01-30 09:50:39
  * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
@@ -12,9 +20,9 @@ import useRootStore from "@/store/rootStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getBillList } from "@/api/bill";
+import { getBillList, getBillTypeList } from "@/api/bill";
 import dayjs from "dayjs";
-import { DatePicker } from '@fruits-chain/react-native-xiaoshu'
+import { DatePicker, Picker } from '@fruits-chain/react-native-xiaoshu'
 
 interface ItemProps {
   date: string;
@@ -41,6 +49,8 @@ const Index = () => {
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
   const [selectMonth, setSelectMonth] = useState(new Date())
+  const [typeObj, setTypeObj] = useState<any>()
+  const [typeList, setTypeList] = useState([])
 
   const insets = useSafeAreaInsets();
   useFocusEffect(
@@ -57,15 +67,22 @@ const Index = () => {
   );
 
   useEffect(() => {
+    getBillTypeList().then(res => {
+      const _data: any = [{ label: '全部', value: 'all' }].concat(res.data.list.map((item: any) => ({ label: item.name, value: item.id })))
+      setTypeList(_data)
+    })
+  }, [])
+
+  useEffect(() => {
     getList(page == 1 ? 'init' : '');
-  }, [page, selectMonth]);
+  }, [page, selectMonth, typeObj]);
 
   const getList = (type: string) => {
     getBillList({
       date: dayjs(selectMonth).format('YYYY-MM'),
       page: page,
       page_size: 5,
-      type_id: "all"
+      type_id: typeObj?.value ?? 'all'
     }).then((res) => {
       setTotalExpense(res.data.totalExpense)
       setTotalIncome(res.data.totalIncome)
@@ -103,6 +120,16 @@ const Index = () => {
       }
     })
   }
+
+  const handleSelectType = () => {
+    Picker({
+      title: "选择类型",
+      columns: typeList
+    }).then(({ action, columns, values }) => {
+      const val: any = columns[0]
+      if (action == 'confirm') setTypeObj(val)
+    })
+  }
   return (
     <SafeAreaView className="h-full bg-[#f5f5f5]">
       <View className="w-full bg-[#1683fc] justify-between pb-4" style={{ marginTop: -insets.top, height: Platform.OS === 'ios' ? 200 : 180 }}>
@@ -117,8 +144,8 @@ const Index = () => {
           </View>
         </View>
         <View className="w-full flex-row justify-end gap-4 px-6">
-          <Pressable className="bg-white rounded-full px-4 py-2">
-            <Text className="text-black text-[14px]">全部类型</Text>
+          <Pressable onPress={handleSelectType} className="bg-white rounded-full px-4 py-2">
+            <Text className="text-black text-[14px]">{typeObj?.label || '全部类型'}</Text>
           </Pressable>
           <Pressable onPress={handleSelectMonth} className="bg-white rounded-full px-4 py-2">
             <Text className="text-black text-[14px]">{dayjs(selectMonth).format('YYYY-MM')}</Text>
