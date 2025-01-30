@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-23 13:45:32
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-30 20:56:58
+ * @LastEditTime: 2025-01-30 21:35:10
  * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -22,7 +22,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getBillList, getBillTypeList } from "@/api/bill";
 import dayjs from "dayjs";
-import { DatePicker, Picker } from '@fruits-chain/react-native-xiaoshu'
+import { DatePicker, Picker, Popup, Tag } from '@fruits-chain/react-native-xiaoshu'
 
 interface ItemProps {
   date: string;
@@ -51,6 +51,8 @@ const Index = () => {
   const [selectMonth, setSelectMonth] = useState(new Date())
   const [typeObj, setTypeObj] = useState<any>()
   const [typeList, setTypeList] = useState([])
+  const [visible, setVisible] = useState(false)
+  const [type, setType] = useState(1)
 
   const insets = useSafeAreaInsets();
   useFocusEffect(
@@ -133,6 +135,7 @@ const Index = () => {
 
   const handleAddBill = () => {
     console.log('handleAddBill');
+    setVisible(true)
   }
 
   return (
@@ -197,6 +200,37 @@ const Index = () => {
       <TouchableOpacity onPress={handleAddBill} className="absolute z-30 right-4 bottom-[150] w-[50] h-[50] rounded-full bg-[#1683fc] justify-center items-center shadow-md shadow-zinc-300">
         <Text className="text-white text-[32px]">+</Text>
       </TouchableOpacity>
+      <Popup
+        safeAreaInsetBottom={true}
+        safeAreaInsetTop={false}
+        visible={visible}
+        position="bottom"
+        onPressOverlay={() => {
+          setVisible(false)
+        }}
+        onRequestClose={() => {
+          setVisible(false)
+          return true
+        }}
+        round
+      >
+        <View className="w-full bg-white p-4">
+          <View className="w-full flex-row items-center justify-between">
+            <View className="flex-row items-center gap-2">
+              <Pressable onPress={() => setType(1)}>
+                <Tag color={`${type == 1 ? '#1683fc' : '#f5f5f5'}`} textColor={`${type == 1 ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>收入</Tag>
+              </Pressable>
+              <Pressable onPress={() => setType(2)}>
+                <Tag color={`${type == 2 ? '#FFA238' : '#f5f5f5'}`} textColor={`${type == 2 ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>支出</Tag>
+              </Pressable>
+            </View>
+            <Text className="text-[14px] bg-[#f0f0f0] py-2 px-4 rounded-full">01-29</Text>
+          </View>
+          <View className="w-full flex-row items-center border-b border-zinc-100 pb-2">
+            <Text className="text-[46px] font-bold">¥</Text>
+          </View>
+        </View>
+      </Popup>
     </SafeAreaView>
   );
 };
