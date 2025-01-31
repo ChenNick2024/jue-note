@@ -6,8 +6,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getBillList, getBillTypeList, addBill } from "@/api/bill";
 import dayjs from "dayjs";
-import { DatePicker, Picker, Popup, Tag, Toast } from '@fruits-chain/react-native-xiaoshu'
-import { back } from "@/constants/image";
+import { DatePicker, Picker, Popup, Tag, Toast, Dialog } from '@fruits-chain/react-native-xiaoshu'
+import { back, add, write } from "@/constants/image";
 
 interface ItemProps {
   date: string;
@@ -41,6 +41,7 @@ const Index = () => {
   const [selectAddType, setSelectAddType] = useState<any>()
   const [selectDate, setSelectDate] = useState(new Date())
   const [amount, setAmount] = useState('')
+  const [remark, setRemark] = useState('')
 
   const insets = useSafeAreaInsets();
   useFocusEffect(
@@ -177,6 +178,19 @@ const Index = () => {
     })
   }
 
+  const handleEditRemark = () => {
+    Dialog.input({
+      safeAreaTop: 100,
+      title: '备注',
+      placeholder: '请输入备注',
+      type: 'textarea',
+      defaultValue: remark,
+      onPressConfirm: t => {
+        setRemark(t)
+      },
+    })
+  }
+
   return (
     <SafeAreaView className="h-full bg-[#f5f5f5]">
       <View className="w-full bg-[#1683fc] justify-between pb-4" style={{ marginTop: -insets.top, height: Platform.OS === 'ios' ? 200 : 160 }}>
@@ -236,9 +250,9 @@ const Index = () => {
           ListFooterComponent={() => loading ? <ActivityIndicator size="large" color="#1683fc" /> : hasMore ? null : <Text style={{ textAlign: 'center', padding: 10 }}>没有更多数据了</Text>}
         />
       </View>
-      <TouchableOpacity onPress={handleAddBill} className="absolute z-30 right-4 bottom-[150] w-[50] h-[50] rounded-full bg-[#1683fc] justify-center items-center shadow-md shadow-zinc-300">
-        <Text className="text-white text-[32px]">+</Text>
-      </TouchableOpacity>
+      <Pressable onPress={handleAddBill} className="absolute z-30 right-4 bottom-[150] p-1 rounded-full bg-[#1683fc] justify-center items-center shadow-md shadow-zinc-400">
+        <Image source={add} tintColor={'#fff'} className="size-14" />
+      </Pressable>
       <Popup
         safeAreaInsetBottom={true}
         safeAreaInsetTop={false}
@@ -271,7 +285,7 @@ const Index = () => {
             <Text className="text-[46px] font-bold">¥</Text>
             <Text className="text-[36px] font-bold">{amount}</Text>
           </View>
-          <View className="flex-row items-center">
+          <View className="flex-row items-center mb-2">
             <FlatList
               data={typeList.filter((item: any) => item.value != 'all')}
               keyExtractor={(item, index) => index.toString()}
@@ -280,6 +294,13 @@ const Index = () => {
                 <Tag color={`${selectAddType?.id == item.id ? '#1683fc' : '#f5f5f5'}`} textColor={`${selectAddType?.id == item.id ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>{item.label}</Tag>
               </Pressable>}
             />
+          </View>
+          <View className="flex-row items-center mb-4">
+            <Text className="text-base">备注：</Text>
+            <Text className="text-base">{remark}</Text>
+            <Pressable onPress={handleEditRemark} className="flex-row items-center ml-2">
+              <Image source={write} tintColor={'#1683fc'} className="size-5" />
+            </Pressable>
           </View>
           <View className="w-full flex-row">
             <View className="w-3/4 flex-row flex-wrap border-l border-b border-zinc-100">
