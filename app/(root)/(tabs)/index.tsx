@@ -232,7 +232,7 @@ const Index = () => {
                 <View className={`bg-white p-4 rounded-b-lg ${idx < item.bills.length - 1 ? 'border-b border-zinc-100' : ''}`} key={bill.id.toString()}>
                   <View className="flex-row items-center justify-between mb-4">
                     <Text>{bill.type_name}</Text>
-                    <Text className={`${bill.pay_type == 1 ? 'text-green-500' : 'text-red-500'} text-xl`}>{bill.pay_type == 1 ? '+' : '-'}¥{Number(bill.amount).toFixed(2)}</Text>
+                    <Text className={`${bill.pay_type == 1 ? 'text-green-500' : 'text-red-500'} text-xl`}>{bill.pay_type == 1 ? '-' : '+'}¥{Number(bill.amount).toFixed(2)}</Text>
                   </View>
                   <View className="flex-row items-center">
                     <Text className="text-sm">{dayjs(Number(bill.date) / 1000).format('HH:mm')}</Text>
