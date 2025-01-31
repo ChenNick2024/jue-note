@@ -1,28 +1,13 @@
-/*
- * @Author: 陈尼克 xianyou1993@qq.com
- * @Date: 2025-01-23 13:45:32
- * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-30 21:35:10
- * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
-/*
- * @Author: 陈尼克 xianyou1993@qq.com
- * @Date: 2025-01-23 13:45:32
- * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-30 09:50:39
- * @FilePath: /jue-note/app/(root)/(tabs)/index.tsx
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import { View, Text, Button, StatusBar, Platform, Pressable, FlatList, Image, RefreshControl, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useEffect, useCallback, useState } from "react";
 import useRootStore from "@/store/rootStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getBillList, getBillTypeList } from "@/api/bill";
+import { getBillList, getBillTypeList, addBill } from "@/api/bill";
 import dayjs from "dayjs";
-import { DatePicker, Picker, Popup, Tag } from '@fruits-chain/react-native-xiaoshu'
+import { DatePicker, Picker, Popup, Tag, Toast } from '@fruits-chain/react-native-xiaoshu'
+import { back } from "@/constants/image";
 
 interface ItemProps {
   date: string;
@@ -53,6 +38,9 @@ const Index = () => {
   const [typeList, setTypeList] = useState([])
   const [visible, setVisible] = useState(false)
   const [type, setType] = useState(1)
+  const [selectAddType, setSelectAddType] = useState<any>()
+  const [selectDate, setSelectDate] = useState(new Date())
+  const [amount, setAmount] = useState('')
 
   const insets = useSafeAreaInsets();
   useFocusEffect(
@@ -70,7 +58,7 @@ const Index = () => {
 
   useEffect(() => {
     getBillTypeList().then(res => {
-      const _data: any = [{ label: '全部', value: 'all' }].concat(res.data.list.map((item: any) => ({ label: item.name, value: item.id })))
+      const _data: any = [{ label: '全部', value: 'all' }].concat(res.data.list.map((item: any) => ({ label: item.name, value: item.id, id: item.id })))
       setTypeList(_data)
     })
   }, [])
@@ -134,13 +122,64 @@ const Index = () => {
   }
 
   const handleAddBill = () => {
-    console.log('handleAddBill');
     setVisible(true)
+  }
+
+  const handleSelectDate = () => {
+    DatePicker({
+      title: '选择日期',
+      mode: 'Y-D',
+      testID: 'date-picker-test1',
+    }).then(({ action, value }) => {
+      if (action == 'confirm') setSelectDate(value)
+    })
+  }
+
+  const handleNumberPress = (value: string | number) => {
+    console.log('handleNumberPress', value);
+    if (value == '⌨️') return
+    if (value == '.') {
+      if (amount.includes('.')) return
+      setAmount(amount + '.')
+    } else {
+      setAmount(amount + value)
+    }
+  }
+
+  const handleDelete = () => {
+    setAmount(amount.slice(0, -1))
+  }
+
+  const handleConfirm = () => {
+    if (!selectAddType?.id) {
+      Toast.fail('请选择类型')
+      return
+    }
+    if (!amount) {
+      Toast.fail('请输入金额')
+      return
+    }
+    console.log('handleConfirm');
+    addBill({
+      date: dayjs(selectDate).unix() * 1000,
+      amount: amount,
+      type_id: selectAddType?.id,
+      type_name: selectAddType?.label,
+      pay_type: type,
+      remark: ''
+    }).then(res => {
+      getList('init')
+      setVisible(false)
+      setAmount('')
+      Toast.success('添加成功')
+    }).catch(err => {
+      Toast.fail('添加失败')
+    })
   }
 
   return (
     <SafeAreaView className="h-full bg-[#f5f5f5]">
-      <View className="w-full bg-[#1683fc] justify-between pb-4" style={{ marginTop: -insets.top, height: Platform.OS === 'ios' ? 200 : 180 }}>
+      <View className="w-full bg-[#1683fc] justify-between pb-4" style={{ marginTop: -insets.top, height: Platform.OS === 'ios' ? 200 : 160 }}>
         <View>
           <View className="w-full flex-row items-end px-6" style={{ paddingTop: Platform.OS === 'ios' ? insets.top + 20 : 20 }}>
             <Text className="text-white text-[14px]">总支出：</Text>
@@ -166,24 +205,24 @@ const Index = () => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => <View className="w-[90%] bg-white m-auto mb-4 shadow-md shadow-zinc-300 rounded-lg">
             <View className="bg-[#f9f9f9] flex-row items-center justify-between p-4 rounded-t-lg">
-              <Text className="text-[14px] font-bold">{item.date}</Text>
+              <Text className="text-xl font-bold">{item.date}</Text>
               <View className="flex-row items-center gap-2">
                 <Image source={{ uri: "https://s.yezgea02.com/1615953405599/zhi%402x.png" }} className="size-4" />
-                <Text className="text-[14px]">¥1.00</Text>
+                <Text className="text-xl">¥{item.bills.filter(m => m.pay_type == 1).reduce((acc, cur) => acc + Number(cur.amount), 0)}</Text>
                 <Image source={{ uri: "https://s.yezgea02.com/1615953405599/shou%402x.png" }} className="size-4" />
-                <Text className="text-[14px]">¥12.00</Text>
+                <Text className="text-xl">¥{item.bills.filter(m => m.pay_type == 2).reduce((acc, cur) => acc + Number(cur.amount), 0)}</Text>
               </View>
             </View>
             {
               item.bills.map((bill: BillProps, idx: number) => (
-                <View className={`bg-white p-4 rounded-b-lg ${idx < item.bills.length - 1 ? 'border-b border-zinc-100' : ''}`} key={idx}>
+                <View className={`bg-white p-4 rounded-b-lg ${idx < item.bills.length - 1 ? 'border-b border-zinc-100' : ''}`} key={bill.id.toString()}>
                   <View className="flex-row items-center justify-between mb-4">
                     <Text>{bill.type_name}</Text>
-                    <Text className={`${bill.pay_type == 1 ? 'text-green-500' : 'text-red-500'}`}>{bill.pay_type == 1 ? '+' : '-'}¥{bill.amount}</Text>
+                    <Text className={`${bill.pay_type == 1 ? 'text-green-500' : 'text-red-500'} text-xl`}>{bill.pay_type == 1 ? '+' : '-'}¥{Number(bill.amount).toFixed(2)}</Text>
                   </View>
                   <View className="flex-row items-center">
-                    <Text>{dayjs(Number(bill.date) / 1000).format('HH:mm')}</Text>
-                    {bill.remark ? <Text>｜备注</Text> : null}
+                    <Text className="text-sm">{dayjs(Number(bill.date) / 1000).format('HH:mm')}</Text>
+                    {bill.remark ? <Text className="text-sm">｜备注</Text> : null}
                   </View>
                 </View>
               ))
@@ -224,10 +263,40 @@ const Index = () => {
                 <Tag color={`${type == 2 ? '#FFA238' : '#f5f5f5'}`} textColor={`${type == 2 ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>支出</Tag>
               </Pressable>
             </View>
-            <Text className="text-[14px] bg-[#f0f0f0] py-2 px-4 rounded-full">01-29</Text>
+            <Pressable onPress={handleSelectDate}>
+              <Text className="text-[14px] bg-[#f0f0f0] py-2 px-4 rounded-full">{dayjs(selectDate).format('YYYY-MM-DD')}</Text>
+            </Pressable>
           </View>
           <View className="w-full flex-row items-center border-b border-zinc-100 pb-2">
             <Text className="text-[46px] font-bold">¥</Text>
+            <Text className="text-[36px] font-bold">{amount}</Text>
+          </View>
+          <View className="flex-row items-center">
+            <FlatList
+              data={typeList.filter((item: any) => item.value != 'all')}
+              keyExtractor={(item, index) => index.toString()}
+              horizontal
+              renderItem={({ item }) => <Pressable onPress={() => setSelectAddType(item)} className="w-[50px] py-4">
+                <Tag color={`${selectAddType?.id == item.id ? '#1683fc' : '#f5f5f5'}`} textColor={`${selectAddType?.id == item.id ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>{item.label}</Tag>
+              </Pressable>}
+            />
+          </View>
+          <View className="w-full flex-row">
+            <View className="w-3/4 flex-row flex-wrap border-l border-b border-zinc-100">
+              {[1,2,3,4,5,6,7,8,9,'.',0,'⌨️'].map((item, index) => (
+                <Pressable key={index} onPress={() => handleNumberPress(item)} className='w-1/3 h-[50px] flex items-center justify-center border-r border-t border-zinc-100'>
+                  <Text className='text-2xl'>{item}</Text>
+                </Pressable>
+              ))}
+            </View>
+            <View className="w-1/4 border-t border-r border-zinc-100">
+              <Pressable onPress={handleDelete} className="h-[100px] w-full flex items-center justify-center border-b border-zinc-100">
+                <Image source={back} tintColor={'#222'} className="size-8" />
+              </Pressable>
+              <Pressable onPress={handleConfirm} className="h-[100px] w-full flex items-center justify-center border-b border-zinc-100 bg-primary-300">
+                <Text className="text-white text-2xl">确认</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Popup>

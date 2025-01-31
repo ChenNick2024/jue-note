@@ -15,3 +15,11 @@ export const getBillTypeList = () => {
     method: "GET"
   });
 };
+
+export const addBill = (params: { date: number; amount: string; type_id: string; type_name: string; pay_type: number; remark: string }) => {
+  return request({
+    url: '/bill/add',
+    method: "POST",
+    data: params
+  });
+};

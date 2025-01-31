@@ -7,10 +7,10 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { useState } from 'react'
-import { SafeAreaView, Text, TextInput, View, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { resetPass } from '@/api/user';
-
+import { Toast } from '@fruits-chain/react-native-xiaoshu'
 const ResetPass = () => {
   const [oldPass, setOldPass] = useState("")
   const [newPass, setNewPass] = useState("")
@@ -18,18 +18,18 @@ const ResetPass = () => {
 
   const handleSave = () => {
     if (!oldPass || !newPass || !confirmPass) {
-      Alert.alert('请输入完整信息')
+      Toast.fail('请输入完整信息')
       return
     }
     if (newPass !== confirmPass) {
-      Alert.alert('新密码与确认密码不一致')
+      Toast.fail('新密码与确认密码不一致')
       return
     }
     resetPass({ oldPass, newPass, confirmPass }).then(res => {
-      Alert.alert('重置密码成功')
+      Toast.success('重置密码成功')
       router.back()
     }).catch(err => {
-      Alert.alert(err.msg)
+      Toast.fail(err.msg)
     })
   }
 

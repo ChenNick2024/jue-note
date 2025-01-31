@@ -2,12 +2,12 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-25 08:59:41
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-01-26 15:34:40
+ * @LastEditTime: 2025-01-31 11:22:42
  * @FilePath: /jue-note/app/login.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { useState, useCallback } from "react";
-import { View, Text, TextInput, Button, StatusBar, Image, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, Button, StatusBar, Image, TouchableOpacity } from "react-native";
 import { useMutation } from "@tanstack/react-query";
 import { login, register } from "@/api/user";
 import { router } from "expo-router";
@@ -15,8 +15,8 @@ import useRootStore from "@/store/rootStore";
 import { getUserInfo } from "@/api/user";
 import { LinearGradient } from 'expo-linear-gradient';
 import { mobile, lock } from "@/constants/image";
-import Toast from "react-native-toast-message";
 import { useFocusEffect } from "@react-navigation/native";
+import { Toast } from '@fruits-chain/react-native-xiaoshu'
 const Login = () => {
   const { setToken, setUserInfo } = useRootStore();
   const { mutate: _getUserInfo } = useMutation({
@@ -68,13 +68,10 @@ const Login = () => {
       return;
     }
     register({ username, password }).then(() => {
-      Toast.show({
-        type: 'success',
-        text1: '注册成功',
-      });
+      Toast.success('注册成功');
       setActive(1);
     }).catch((error) => {
-      Alert.alert(error.msg);
+      Toast.fail(error.msg);
     });
   };
 

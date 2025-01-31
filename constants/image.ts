@@ -8,8 +8,10 @@
  */
 import mobile from '../assets/images/mobile.png';
 import lock from '../assets/images/lock.png';
+import back from '../assets/images/backback.png';
 
 export {
   mobile,
-  lock
+  lock,
+  back
 }
