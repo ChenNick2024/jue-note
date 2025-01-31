@@ -1,10 +1,10 @@
-import { View, Text, Button, StatusBar, Platform, Pressable, FlatList, Image, RefreshControl, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, StatusBar, Platform, Pressable, FlatList, Image, RefreshControl, ActivityIndicator, AppState } from "react-native";
 import { useEffect, useCallback, useState } from "react";
 import useRootStore from "@/store/rootStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getBillList, getBillTypeList, addBill } from "@/api/bill";
+import { getBillList, getBillTypeList as getBillTypeListApi, addBill } from "@/api/bill";
 import dayjs from "dayjs";
 import { DatePicker, Picker, Popup, Tag, Toast, Dialog } from '@fruits-chain/react-native-xiaoshu'
 import { back, add, write } from "@/constants/image";
@@ -42,7 +42,7 @@ const Index = () => {
   const [selectDate, setSelectDate] = useState(new Date())
   const [amount, setAmount] = useState('')
   const [remark, setRemark] = useState('')
-
+  const [appState, setAppState] = useState(AppState.currentState)
   const insets = useSafeAreaInsets();
   useFocusEffect(
     useCallback(() => {
@@ -58,15 +58,35 @@ const Index = () => {
   );
 
   useEffect(() => {
-    getBillTypeList().then(res => {
-      const _data: any = [{ label: '全部', value: 'all' }].concat(res.data.list.map((item: any) => ({ label: item.name, value: item.id, id: item.id })))
-      setTypeList(_data)
-    })
+    getBillTypeList()
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (appState.match(/inactive|background/) && nextAppState === "active") {
+        if (typeList.length == 0) getBillTypeList()
+      }
+      setAppState(nextAppState);
+    });
+
+    return () => subscription.remove();
   }, [])
 
   useEffect(() => {
     getList(page == 1 ? 'init' : '');
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (appState.match(/inactive|background/) && nextAppState === "active") {
+        if (billList.length == 0) getList(page == 1 ? 'init' : '');
+      }
+      setAppState(nextAppState);
+    });
+
+    return () => subscription.remove();
   }, [page, selectMonth, typeObj]);
+
+  const getBillTypeList = () => {
+    getBillTypeListApi().then(res => {
+      const _data: any = [{ label: '全部', value: 'all' }].concat(res.data.list.map((item: any) => ({ label: item.name, value: item.id, id: item.id })))
+      setTypeList(_data)
+    })
+  }
 
   const getList = (type: string) => {
     getBillList({
@@ -167,7 +187,7 @@ const Index = () => {
       type_id: selectAddType?.id,
       type_name: selectAddType?.label,
       pay_type: type,
-      remark: ''
+      remark: remark
     }).then(res => {
       getList('init')
       setVisible(false)
@@ -236,7 +256,7 @@ const Index = () => {
                   </View>
                   <View className="flex-row items-center">
                     <Text className="text-sm">{dayjs(Number(bill.date) / 1000).format('HH:mm')}</Text>
-                    {bill.remark ? <Text className="text-sm">｜备注</Text> : null}
+                    {bill.remark ? <Text className="text-sm">｜{bill.remark}</Text> : null}
                   </View>
                 </View>
               ))
