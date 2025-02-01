@@ -30,7 +30,7 @@ const Index = () => {
   const [hasMore, setHasMore] = useState(true);
   const [billList, setBillList] = useState([]);
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
+  const [isEnd, setIsEnd] = useState(false);
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
   const [selectMonth, setSelectMonth] = useState(new Date())
@@ -97,9 +97,14 @@ const Index = () => {
     }).then((res) => {
       setTotalExpense(res.data.totalExpense)
       setTotalIncome(res.data.totalIncome)
-      const _list = type == 'init' ? res.data.list : billList.concat(res.data.list);
-      setBillList(_list);
-      setTotal(res.data.totalPage)
+      if (res.data.list.length) {
+        const _list = type == 'init' ? res.data.list : billList.concat(res.data.list);
+        setBillList(_list);
+        setIsEnd(false)
+      } else {
+        setIsEnd(true)
+      }
+      setLoading(false)
       setRefreshing(false)
     }).catch(err => {
       console.log('err', err);
@@ -113,7 +118,7 @@ const Index = () => {
   }
 
   const loadMoreData = () => {
-    if (loading || page * 5 >= total) return;
+    if (loading || isEnd) return;
     setLoading(true);
     setPage(page + 1);
   }
@@ -225,11 +230,11 @@ const Index = () => {
           </View>
         </View>
         <View className="w-full flex-row justify-end gap-4 px-6">
-          <Pressable onPress={handleSelectType} className="bg-white rounded-full px-4 py-2">
-            <Text className="text-black text-[14px]">{typeObj?.label || '全部类型'}</Text>
+          <Pressable onPress={handleSelectType} className="bg-[#1476e2] rounded-full px-3 py-1">
+            <Text className="text-white text-[14px]">{typeObj?.label || '全部类型'}</Text>
           </Pressable>
-          <Pressable onPress={handleSelectMonth} className="bg-white rounded-full px-4 py-2">
-            <Text className="text-black text-[14px]">{dayjs(selectMonth).format('YYYY-MM')}</Text>
+          <Pressable onPress={handleSelectMonth} className="bg-[#1476e2] rounded-full px-3 py-1">
+            <Text className="text-white text-[14px]">{dayjs(selectMonth).format('YYYY-MM')}</Text>
           </Pressable>
         </View>
       </View>
