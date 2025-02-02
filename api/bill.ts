@@ -23,3 +23,26 @@ export const addBill = (params: { date: number; amount: string; type_id: string;
     data: params
   });
 };
+
+export const editBill = (params: { id: number | string | undefined; date: number; amount: string; type_id: string; type_name: string; pay_type: number; remark: string }) => {
+  return request({
+    url: '/bill/update',
+    method: "POST",
+    data: params
+  });
+};
+
+export const deleteBill = (params: { id: number | string }) => {
+  return request({
+    url: '/bill/delete',
+    method: "POST",
+    data: params
+  });
+};
+
+export const billDetail = (params: { id: number | string }) => {
+  return request({
+    url: `/bill/detail?id=${params.id}`,
+    method: "GET",
+  });
+};

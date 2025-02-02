@@ -4,10 +4,12 @@ import useRootStore from "@/store/rootStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getBillList, getBillTypeList as getBillTypeListApi, addBill } from "@/api/bill";
+import { getBillList } from "@/api/bill";
 import dayjs from "dayjs";
-import { DatePicker, Picker, Popup, Tag, Toast, Dialog } from '@fruits-chain/react-native-xiaoshu'
-import { back, add, write } from "@/constants/image";
+import { DatePicker, Picker } from '@fruits-chain/react-native-xiaoshu'
+import { add } from "@/constants/image";
+import { router } from "expo-router";
+import AddPopup from "@/components/AddPopup";
 
 interface ItemProps {
   date: string;
@@ -24,7 +26,7 @@ interface BillProps {
 }
 
 const Index = () => {
-  const { setCurrentTab } = useRootStore();
+  const { setCurrentTab, typeListAll } = useRootStore();
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -35,13 +37,7 @@ const Index = () => {
   const [totalIncome, setTotalIncome] = useState(0);
   const [selectMonth, setSelectMonth] = useState(new Date())
   const [typeObj, setTypeObj] = useState<any>()
-  const [typeList, setTypeList] = useState([])
   const [visible, setVisible] = useState(false)
-  const [type, setType] = useState(1)
-  const [selectAddType, setSelectAddType] = useState<any>()
-  const [selectDate, setSelectDate] = useState(new Date())
-  const [amount, setAmount] = useState('')
-  const [remark, setRemark] = useState('')
   const [appState, setAppState] = useState(AppState.currentState)
   const insets = useSafeAreaInsets();
   useFocusEffect(
@@ -58,18 +54,6 @@ const Index = () => {
   );
 
   useEffect(() => {
-    getBillTypeList()
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (appState.match(/inactive|background/) && nextAppState === "active") {
-        if (typeList.length == 0) getBillTypeList()
-      }
-      setAppState(nextAppState);
-    });
-
-    return () => subscription.remove();
-  }, [])
-
-  useEffect(() => {
     getList(page == 1 ? 'init' : '');
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (appState.match(/inactive|background/) && nextAppState === "active") {
@@ -80,13 +64,6 @@ const Index = () => {
 
     return () => subscription.remove();
   }, [page, selectMonth, typeObj]);
-
-  const getBillTypeList = () => {
-    getBillTypeListApi().then(res => {
-      const _data: any = [{ label: '全部', value: 'all' }].concat(res.data.list.map((item: any) => ({ label: item.name, value: item.id, id: item.id })))
-      setTypeList(_data)
-    })
-  }
 
   const getList = (type: string) => {
     getBillList({
@@ -140,7 +117,7 @@ const Index = () => {
   const handleSelectType = () => {
     Picker({
       title: "选择类型",
-      columns: typeList
+      columns: typeListAll
     }).then(({ action, columns, values }) => {
       const val: any = columns[0]
       if (action == 'confirm') setTypeObj(val)
@@ -151,81 +128,14 @@ const Index = () => {
     setVisible(true)
   }
 
-  const handleSelectDate = () => {
-    DatePicker({
-      title: '选择日期',
-      mode: 'Y-D',
-      testID: 'date-picker-test1',
-    }).then(({ action, value }) => {
-      if (action == 'confirm') setSelectDate(value)
-    })
-  }
-
-  const handleNumberPress = (value: string | number) => {
-    console.log('handleNumberPress', value);
-    if (value == '⌨️') return
-    if (value == '.') {
-      if (amount.includes('.')) return
-      setAmount(amount + '.')
-    } else {
-      setAmount(amount + value)
-    }
-  }
-
-  const handleDelete = () => {
-    setAmount(amount.slice(0, -1))
-  }
-
-  const handleConfirm = () => {
-    if (!selectAddType?.id) {
-      Toast.fail('请选择类型')
-      return
-    }
-    if (!amount) {
-      Toast.fail('请输入金额')
-      return
-    }
-    console.log('handleConfirm');
-    addBill({
-      date: dayjs(selectDate).unix() * 1000,
-      amount: amount,
-      type_id: selectAddType?.id,
-      type_name: selectAddType?.label,
-      pay_type: type,
-      remark: remark
-    }).then(res => {
-      getList('init')
-      setVisible(false)
-      setAmount('')
-      Toast.success('添加成功')
-    }).catch(err => {
-      Toast.fail('添加失败')
-    })
-  }
-
-  const handleEditRemark = () => {
-    Dialog.input({
-      safeAreaTop: 100,
-      title: '备注',
-      placeholder: '请输入备注',
-      type: 'textarea',
-      defaultValue: remark,
-      onPressConfirm: t => {
-        setRemark(t)
-      },
-    })
-  }
-
   return (
     <SafeAreaView className="h-full bg-[#f5f5f5]">
-      <View className="w-full bg-[#1683fc] justify-between pb-4" style={{ marginTop: -insets.top, height: Platform.OS === 'ios' ? 200 : 160 }}>
-        <View>
+      <View className="w-full bg-[#1683fc] justify-between pb-4" style={{ marginTop: -insets.top, height: Platform.OS === 'ios' ? 160 : 120 }}>
+        <View className="w-full flex-row items-center">
           <View className="w-full flex-row items-end px-6" style={{ paddingTop: Platform.OS === 'ios' ? insets.top + 20 : 20 }}>
-            <Text className="text-white text-[14px]">总支出：</Text>
+            <Text className="text-white text-[14px] pb-[2px]">总支出：</Text>
             <Text className="text-white text-[20px] font-bold">¥{totalExpense.toFixed(2)}</Text>
-          </View>
-          <View className="w-full flex-row items-end px-6 pt-[20px]">
-            <Text className="text-white text-[14px]">总收入：</Text>
+            <Text className="text-white text-[14px] ml-4 pb-[2px]">总收入：</Text>
             <Text className="text-white text-[20px] font-bold">¥{totalIncome.toFixed(2)}</Text>
           </View>
         </View>
@@ -254,7 +164,7 @@ const Index = () => {
             </View>
             {
               item.bills.map((bill: BillProps, idx: number) => (
-                <View className={`bg-white p-4 rounded-b-lg ${idx < item.bills.length - 1 ? 'border-b border-zinc-100' : ''}`} key={bill.id.toString()}>
+                <Pressable onPress={() => router.push(`/detail/${bill.id}`)} className={`bg-white p-4 rounded-b-lg ${idx < item.bills.length - 1 ? 'border-b border-zinc-100' : ''}`} key={bill.id.toString()}>
                   <View className="flex-row items-center justify-between mb-4">
                     <Text>{bill.type_name}</Text>
                     <Text className={`${bill.pay_type == 1 ? 'text-green-500' : 'text-red-500'} text-xl`}>{bill.pay_type == 1 ? '-' : '+'}¥{Number(bill.amount).toFixed(2)}</Text>
@@ -263,7 +173,7 @@ const Index = () => {
                     <Text className="text-sm">{dayjs(Number(bill.date) / 1000).format('HH:mm')}</Text>
                     {bill.remark ? <Text className="text-sm">｜{bill.remark}</Text> : null}
                   </View>
-                </View>
+                </Pressable>
               ))
             }
           </View>}
@@ -278,74 +188,7 @@ const Index = () => {
       <Pressable onPress={handleAddBill} className="absolute z-30 right-4 bottom-[150] p-1 rounded-full bg-[#1683fc] justify-center items-center shadow-md shadow-zinc-400">
         <Image source={add} tintColor={'#fff'} className="size-14" />
       </Pressable>
-      <Popup
-        safeAreaInsetBottom={true}
-        safeAreaInsetTop={false}
-        visible={visible}
-        position="bottom"
-        onPressOverlay={() => {
-          setVisible(false)
-        }}
-        onRequestClose={() => {
-          setVisible(false)
-          return true
-        }}
-        round
-      >
-        <View className="w-full bg-white p-4">
-          <View className="w-full flex-row items-center justify-between">
-            <View className="flex-row items-center gap-2">
-              <Pressable onPress={() => setType(1)}>
-                <Tag color={`${type == 1 ? '#1683fc' : '#f5f5f5'}`} textColor={`${type == 1 ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>收入</Tag>
-              </Pressable>
-              <Pressable onPress={() => setType(2)}>
-                <Tag color={`${type == 2 ? '#FFA238' : '#f5f5f5'}`} textColor={`${type == 2 ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>支出</Tag>
-              </Pressable>
-            </View>
-            <Pressable onPress={handleSelectDate}>
-              <Text className="text-[14px] bg-[#f0f0f0] py-2 px-4 rounded-full">{dayjs(selectDate).format('YYYY-MM-DD')}</Text>
-            </Pressable>
-          </View>
-          <View className="w-full flex-row items-center border-b border-zinc-100 pb-2">
-            <Text className="text-[46px] font-bold">¥</Text>
-            <Text className="text-[36px] font-bold">{amount}</Text>
-          </View>
-          <View className="flex-row items-center mb-2">
-            <FlatList
-              data={typeList.filter((item: any) => item.value != 'all')}
-              keyExtractor={(item, index) => index.toString()}
-              horizontal
-              renderItem={({ item }) => <Pressable onPress={() => setSelectAddType(item)} className="w-[50px] py-4">
-                <Tag color={`${selectAddType?.id == item.id ? '#1683fc' : '#f5f5f5'}`} textColor={`${selectAddType?.id == item.id ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>{item.label}</Tag>
-              </Pressable>}
-            />
-          </View>
-          <View className="flex-row items-center mb-4">
-            <Text className="text-base">备注：</Text>
-            <Text className="text-base">{remark}</Text>
-            <Pressable onPress={handleEditRemark} className="flex-row items-center ml-2">
-              <Image source={write} tintColor={'#1683fc'} className="size-5" />
-            </Pressable>
-          </View>
-          <View className="w-full flex-row">
-            <View className="w-3/4 flex-row flex-wrap border-l border-b border-zinc-100">
-              {[1,2,3,4,5,6,7,8,9,'.',0,'⌨️'].map((item, index) => (
-                <Pressable key={index} onPress={() => handleNumberPress(item)} className='w-1/3 h-[50px] flex items-center justify-center border-r border-t border-zinc-100'>
-                  <Text className='text-2xl'>{item}</Text>
-                </Pressable>
-              ))}
-            </View>
-            <View className="w-1/4 border-t border-r border-zinc-100">
-              <Pressable onPress={handleDelete} className="h-[100px] w-full flex items-center justify-center border-b border-zinc-100">
-                <Image source={back} tintColor={'#222'} className="size-8" />
-              </Pressable>
-              <Pressable onPress={handleConfirm} className="h-[100px] w-full flex items-center justify-center border-b border-zinc-100 bg-primary-300">
-                <Text className="text-white text-2xl">确认</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Popup>
+      <AddPopup visible={visible} setVisible={setVisible} onCb={getList} />
     </SafeAreaView>
   );
 };
