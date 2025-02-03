@@ -10,6 +10,7 @@ import { DatePicker, Picker } from '@fruits-chain/react-native-xiaoshu'
 import { add } from "@/constants/image";
 import { router } from "expo-router";
 import AddPopup from "@/components/AddPopup";
+import AnimatedNumber from "react-native-animated-number"
 
 interface ItemProps {
   date: string;
@@ -132,11 +133,21 @@ const Index = () => {
     <SafeAreaView className="h-full bg-[#f5f5f5]">
       <View className="w-full bg-[#1683fc] justify-between pb-4" style={{ marginTop: -insets.top, height: Platform.OS === 'ios' ? 160 : 120 }}>
         <View className="w-full flex-row items-center">
-          <View className="w-full flex-row items-end px-6" style={{ paddingTop: Platform.OS === 'ios' ? insets.top + 20 : 20 }}>
-            <Text className="text-white text-[14px] pb-[2px]">总支出：</Text>
-            <Text className="text-white text-[20px] font-bold">¥{totalExpense.toFixed(2)}</Text>
-            <Text className="text-white text-[14px] ml-4 pb-[2px]">总收入：</Text>
-            <Text className="text-white text-[20px] font-bold">¥{totalIncome.toFixed(2)}</Text>
+          <View className="w-full flex-row items-center px-6" style={{ paddingTop: Platform.OS === 'ios' ? insets.top + 20 : 20 }}>
+            <Text className="text-white text-[14px]">总支出：</Text>
+            <Text className="text-white text-[24px] font-bold">¥</Text>
+            <AnimatedNumber
+              value={totalExpense}
+              formatter={(val) => val.toLocaleString()}
+              style={{ fontSize: 24, fontWeight: "bold", color: "#fff" }}
+            />
+            <Text className="text-white text-[14px] ml-4">总收入：</Text>
+            <Text className="text-white text-[24px] font-bold">¥</Text>
+            <AnimatedNumber
+              value={totalIncome}
+              formatter={(val) => val.toLocaleString()}
+              style={{ fontSize: 24, fontWeight: "bold", color: "#fff" }}
+            />
           </View>
         </View>
         <View className="w-full flex-row justify-end gap-4 px-6">
@@ -170,7 +181,7 @@ const Index = () => {
                     <Text className={`${bill.pay_type == 1 ? 'text-green-500' : 'text-red-500'} text-xl`}>{bill.pay_type == 1 ? '-' : '+'}¥{Number(bill.amount).toFixed(2)}</Text>
                   </View>
                   <View className="flex-row items-center">
-                    <Text className="text-sm">{dayjs(Number(bill.date) / 1000).format('HH:mm')}</Text>
+                    <Text className="text-sm">{dayjs(Number(bill.date)).format('HH:mm')}</Text>
                     {bill.remark ? <Text className="text-sm">｜{bill.remark}</Text> : null}
                   </View>
                 </Pressable>
@@ -188,7 +199,10 @@ const Index = () => {
       <Pressable onPress={handleAddBill} className="absolute z-30 right-4 bottom-[150] p-1 rounded-full bg-[#1683fc] justify-center items-center shadow-md shadow-zinc-400">
         <Image source={add} tintColor={'#fff'} className="size-14" />
       </Pressable>
-      <AddPopup visible={visible} setVisible={setVisible} onCb={getList} />
+      <AddPopup visible={visible} setVisible={setVisible} onCb={() => {
+        setPage(1)
+        getList('init')
+      }} />
     </SafeAreaView>
   );
 };

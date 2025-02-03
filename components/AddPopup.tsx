@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 2025-01-31 09:36:02
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-02-02 21:11:47
+ * @LastEditTime: 2025-02-03 09:31:47
  * @FilePath: /jue-note/components/AddPopup.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -133,10 +133,10 @@ const AddPopup = ({ id, visible, setVisible, onCb }: { id?: string | number, vis
       <View className="w-full flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <Pressable onPress={() => setType(1)}>
-            <Tag color={`${type == 1 ? '#1683fc' : '#f5f5f5'}`} textColor={`${type == 1 ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>收入</Tag>
+            <Tag color={`${type == 1 ? '#1683fc' : '#f5f5f5'}`} textColor={`${type == 1 ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>支出</Tag>
           </Pressable>
           <Pressable onPress={() => setType(2)}>
-            <Tag color={`${type == 2 ? '#FFA238' : '#f5f5f5'}`} textColor={`${type == 2 ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>支出</Tag>
+            <Tag color={`${type == 2 ? '#FFA238' : '#f5f5f5'}`} textColor={`${type == 2 ? '#fff' : '#000'}`} size="l" innerStyle={{ borderRadius: 20 }}>收入</Tag>
           </Pressable>
         </View>
         <Pressable onPress={handleSelectDate}>

@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 1985-10-26 16:15:00
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-02-02 21:13:52
+ * @LastEditTime: 2025-02-03 11:02:36
  * @FilePath: /jue-note/README.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -22,3 +22,4 @@
 - [x] 完成添加账单的Popup，这边使用的是[小暑组件库]([text](https://24jieqi.github.io/react-native-xiaoshu))提供的`Popup`组件
 - [x] 添加详情页，抽离出`AddPopup`组件，通过`id`来判断是添加还是编辑
 - [x] 抽离类型数据到全局状态里。
+- [x] 优化首页的动画，使用`react-native-animated-number`来实现金额的动画效果
