@@ -2,7 +2,7 @@
  * @Author: 陈尼克 xianyou1993@qq.com
  * @Date: 1985-10-26 16:15:00
  * @LastEditors: 陈尼克 xianyou1993@qq.com
- * @LastEditTime: 2025-02-03 11:43:26
+ * @LastEditTime: 2025-02-03 18:21:10
  * @FilePath: /jue-note/README.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -24,3 +24,4 @@
 - [x] 抽离类型数据到全局状态里。
 - [x] 优化首页的动画，使用`react-native-animated-number`来实现金额的动画效果
 - [x] 如果`components`文件夹不在`app`下，则需要配置`tailwind.config.js`文件，否则`components`文件夹下的样式不生效
+- [x] 数据统计页面引入`echarts`，实现图表的绘制
